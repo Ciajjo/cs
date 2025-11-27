@@ -38,7 +38,3 @@ int main()
 
 // ``` cpp
 //char 转为16进制
-unsigned char ToHex(unsigned char x)
-{
-    return  x > 9 ? x + 55 : x + 48;
-}
