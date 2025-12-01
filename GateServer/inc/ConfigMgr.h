@@ -1,0 +1,60 @@
+#ifndef CONFIGMGR_H
+#define CONFIGMGR_H
+
+#include "const.h"
+
+struct SectionInfo
+{
+    SectionInfo() {}
+    SectionInfo(const SectionInfo &src)
+    {
+        _section_datas = src._section_datas;
+    }
+    SectionInfo &operator=(const SectionInfo &src)
+    {
+        if (this == &src)
+        {
+            return *this;
+        }
+        this->_section_datas = src._section_datas;
+    }
+    ~SectionInfo()
+    {
+        _section_datas.clear();
+    }
+
+    std::map<std::string, std::string> _section_datas;
+    std::string operator[](const std::string &key)
+    {
+        if (_section_datas.find(key) == _section_datas.end())
+        {
+            return "";
+        }
+        return _section_datas[key];
+    }
+};
+
+class ConfigMgr
+{
+public:
+    ConfigMgr();
+    ConfigMgr(const ConfigMgr&);
+    ConfigMgr& operator=(const ConfigMgr&);
+    ~ConfigMgr()
+    {
+        _config_map.clear();
+    }
+    SectionInfo operator[](const std::string& section)
+    {
+        if (_config_map.find(section) == _config_map.end())
+        {
+            return SectionInfo();
+        }
+        return _config_map[section];
+    }
+
+private:
+    std::map<std::string, SectionInfo> _config_map;
+};
+
+#endif // CONFIGMGR_H
