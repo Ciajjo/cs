@@ -1,5 +1,6 @@
 #include "LogicSystem.h"
 #include "HttpConnection.h"
+#include "VarifyGrpcClient.h"
 
 LogicSystem::~LogicSystem()
 {
@@ -44,9 +45,10 @@ LogicSystem::LogicSystem()
         }
 
         auto email = src_root["email"].get<std::string>();
+        GetVarifyRsp rsp = VarifyGrpcClient::GetInstance()->GetVarifyCode(email);
         std::cout << "email is " << email << std::endl;
-        root["error"] = 0;
-        root["error"] = src_root["email"].get<std::string>();
+        root["error"] = rsp.error();
+        root["email"] = src_root["email"].get<std::string>();
         std::string jsonstr = root.dump();
         beast::ostream(connection->_response.body()) << jsonstr;
         return true; });

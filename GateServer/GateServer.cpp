@@ -1,25 +1,28 @@
 #include <iostream>
-#include "CServer.h"
 
+#include "CServer.h"
+#include "ConfigMgr.h"
 
 int main()
 {
+    ConfigMgr gCfgMgr;
+    std::string gate_port_str = gCfgMgr["GateServer"]["Port"];
+    unsigned short gate_port = atoi(gate_port_str.c_str());
     try
     {
-        unsigned short port = static_cast<unsigned short>(8080);
-        net::io_context ioc{ 1 };
+        net::io_context ioc{1};
         boost::asio::signal_set signals(ioc, SIGINT, SIGTERM);
-        signals.async_wait([&ioc](const boost::system::error_code& error, int signal_number) {
+        signals.async_wait([&ioc](const boost::system::error_code &error, int signal_number)
+                           {
 
             if (error) {
                 return;
             }
-            ioc.stop();
-            });
-        std::make_shared<CServer>(ioc, port)->start();
+            ioc.stop(); });
+        std::make_shared<CServer>(ioc, gate_port)->start();
         ioc.run();
     }
-    catch (std::exception const& e)
+    catch (std::exception const &e)
     {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
@@ -37,4 +40,4 @@ int main()
 // 所以对于get请求带参数的情况我们要实现参数解析，我们可以自己实现简单的url解析函数
 
 // ``` cpp
-//char 转为16进制
+// char 转为16进制

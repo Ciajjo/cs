@@ -20,11 +20,12 @@ class VarifyGrpcClient : public Singleton<VarifyGrpcClient>
 
 public:
     GetVarifyRsp GetVarifyCode(std::string email);
-    VarifyGrpcClient();
+
     ~VarifyGrpcClient();
 
 private:
-
+    VarifyGrpcClient();
+    std::unique_ptr<VarifyService::Stub> stub_;
 };
 
 #endif // VARIFYGRPCCLIENT_H
