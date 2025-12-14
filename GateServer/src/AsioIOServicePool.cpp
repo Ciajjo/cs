@@ -51,3 +51,4 @@ void AsioIOServicePool::Stop()
             t.join();
         }
     }
+}

@@ -26,4 +26,25 @@ GetVarifyRsp VarifyGrpcClient::GetVarifyCode(std::string email)
     }
 }
 
+RPConPool::RPConPool(size_t poolsize, std::string host, std::string port)
+    : poolSize_(poolsize), host_(host), port_(port), b_stop_(false)
+{
+    std::shared_ptr<Channel> channel = grpc::CreateChannel(host_ + ":" + port_, grpc::InsecureChannelCredentials());
+    connections_.push(VarifyService::NewStub(channel));
+}
 
+RPConPool::~RPConPool()
+{
+    std::lock_guard<std::mutex> lock(mutex_);
+    Close();
+    while(!connections_.empty())
+    {
+        connections_.pop();
+    }
+}
+
+void RPConPool::Close()
+{
+    b_stop_ = true;
+    cond_.notify_all();
+}

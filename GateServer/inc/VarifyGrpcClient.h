@@ -14,6 +14,24 @@ using message::GetVarifyReq;
 using message::GetVarifyRsp;
 using message::VarifyService;
 
+class RPConPool
+{
+public:
+    RPConPool(size_t poolsize, std::string host, std::string port);
+    ~RPConPool();
+
+private:
+    void Close();
+    
+    std::atomic<bool> b_stop_;
+    size_t poolSize_;
+    std::string host_;
+    std::string port_;
+    std::queue<std::unique_ptr<VarifyService::Stub>> connections_;
+    std::condition_variable cond_;
+    std::mutex mutex_;
+};
+
 class VarifyGrpcClient : public Singleton<VarifyGrpcClient>
 {
     friend class Singleton<VarifyGrpcClient>;

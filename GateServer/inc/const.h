@@ -11,6 +11,10 @@
 #include <functional>
 #include <map>
 #include <unordered_map>
+#include <atomic>
+#include <queue>
+#include <condition_variable>
+#include <mutex>
 
 #include "Singleton.h"
 #include "json.hpp"
@@ -28,7 +32,5 @@ enum ErrorCodes {
     RPCFailed = 1002,  //RPC请求错误
 };
 
-class ConfigMgr;
-extern ConfigMgr gCfgMgr;
 
 #endif // CONST_H
